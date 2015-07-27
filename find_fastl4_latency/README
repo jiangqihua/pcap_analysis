@@ -1,0 +1,27 @@
+it cacualtes the latency of pakcets forwarding by a fastl4 virtual server
+
+the input of the program is generated using tshark (the tcpdump should contain both the inbound and the outbound traffic, a capture with pva/epva disalbed is perferable):
+
+$ tshark -e frame.time_epoch -e vlan.id -e ip.src -e ip.dst -e tcp.srcport -e tcp.dstport -e tcp.seq -e tcp.ack -e tcp.flags -e tcp.len -Tfields -r run3_match.cap > run3_match.cap.csv
+
+the input looks like:
+$ head -10 run3_match.cap.csv
+1436616727.128715000    705     10.61.22.158    10.240.16.251   1299    80      88896118        0       0x00000002      0
+1436616727.171677000    1016    10.61.22.158    10.240.16.251   1299    80      88896118        0       0x00000002      0
+1436616727.172069000    1016    10.240.16.251   10.61.22.158    80      1299    2990712339      88896119        0x00000012      0
+1436616727.199207000    705     10.240.16.251   10.61.22.158    80      1299    2990712339      88896119        0x00000012      0
+1436616727.201528000    705     10.61.22.158    10.240.16.251   1299    80      88896119        2990712340      0x00000010      0
+1436616727.237871000    1016    10.61.22.158    10.240.16.251   1299    80      88896119        2990712340      0x00000010      0
+1436616728.535811000    705     10.61.22.158    10.240.16.251   1299    80      88896119        2990712340      0x00000018      861
+1436616728.535819000    1016    10.61.22.158    10.240.16.251   1299    80      88896119        2990712340      0x00000018      861
+1436616728.536384000    1016    10.240.16.251   10.61.22.158    80      1299    2990712340      88896980        0x00000010      0
+1436616728.536406000    705     10.240.16.251   10.61.22.158    80      1299    2990712340      88896980        0x00000010      0
+
+usage:
+-i: inbound vlan ID
+-o: oubound vlan ID
+-n: number of line in the csv file
+stdin: the input file
+
+example:
+./find_fastl4_latency  -i 705 -o  1016 -n `wc -l run3_match.cap.csv`  < run3_match.cap.csv  
