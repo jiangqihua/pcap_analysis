@@ -55,10 +55,10 @@ int main(int argc, char *argv[]) {
         char *line = NULL;
         size_t len = 0;
         int read;
+        int i = 1;
 
-        int i=1;
         while ((read = getline(&line, &len, stdin)) != -1) {
-//                printf("line=%s", line);
+//              printf("line=%s", line);
                 char *pch;
                 pch = strtok (line, "\t");
                 packets_info_ptr->time_epoch = atof(pch);
@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
                 packets_info_ptr->tcp_len = atoi(pch);
                 packets_info_ptr->has_searched = 0;
                 packets_info_ptr++;                
-//                printf("i=%d\n", i++);
+//              printf("i=%d\n", i++);
         }
 
         packets_info_ptr = packets_info;
@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
         struct packet_info *packets_info_search_ptr = packets_info;
 //      printf("latency\tip_src\tip_dst\ttcp_srcport\ttcp_dstport\ttcp_seq\ttcp_ack\ttcp_flags\ttcp_len\n");
 //      printf("-----------------------------------------------------------------------");
-        for (int i = 0; i < packets_num; i++) {
+        for (i = 0; i < packets_num; i++) {
                 if (((packets_info_ptr->vlan_id == vlan_inbound) && (packets_info_ptr->has_searched == 0)) ||
                                 ((packets_info_ptr->vlan_id == vlan_outbound) && (packets_info_ptr->has_searched == 0))) {
                         for (packets_info_search_ptr = packets_info_ptr + 1; 
